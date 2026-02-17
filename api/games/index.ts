@@ -5,9 +5,12 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  const method = req.method;
+  if (method !== 'GET')
+    res.status(405).json({ error: 'Method not allowed' });
   const { rows } = await query(
     `SELECT id, name FROM games;`
   );
 
-  res.json(rows);
+  res.status(200).json(rows);
 }
