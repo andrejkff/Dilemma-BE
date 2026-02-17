@@ -8,9 +8,13 @@ export default async function handler(
   const method = req.method;
   if (method !== 'GET')
     res.status(405).json({ error: 'Method not allowed' });
-  const { rows } = await query(
-    `SELECT id, name FROM games;`
-  );
+  try {
+    const { rows } = await query(
+      `SELECT id, name FROM games;`
+    );
 
-  res.status(200).json(rows);
+    res.status(200).json(rows);
+  } catch (e) {
+    res.status(500).json(e);
+  }
 }
