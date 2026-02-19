@@ -1,3 +1,9 @@
+import dotenv from 'dotenv';
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: '.env.local' });
+}
+
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { query } from '../../src/db.js';
 
@@ -5,7 +11,7 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001'); // allow your app
+  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN!);
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
