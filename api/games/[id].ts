@@ -1,3 +1,9 @@
+import dotenv from 'dotenv';
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: '.env.local' });
+}
+
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { query } from '../../src/db.js';
 
@@ -5,6 +11,10 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN!);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -33,9 +43,9 @@ export default async function handler(
       points_map[slot.slot_key] = {
         id: slot.id,
         name: slot.name,
-        initial_value: slot.initial_value,
-        min_value: slot.min_value,
-        max_value: slot.max_value,
+        initial_value: parseInt(slot.initial_value),
+        min_value: parseInt(slot.min_value),
+        max_value: parseInt(slot.max_value),
         decimal_places: slot.decimal_places,
         points_unit: slot.points_unit,
         include_in_game_outcome_calculation: slot.include_in_game_outcome_calculation,
@@ -70,16 +80,7 @@ export default async function handler(
     );
     const graphics = graphicsRows[0] || { background_image_url: null };
 
-    const { rows: spritesRows } = await query(
-      'SELECT * FROM game_sprites WHERE game_id = $1 ORDER BY id ASC;',
-      [id]
-    );
-    graphics.initial_sprites = spritesRows.map((s) => ({
-      id: s.id,
-      image_url: s.image_url,
-      left: s.left_pos,
-      top: s.top_pos,
-    }));
+    graphics.initial_sprites = [];
 
     const fullGame = {
       id: game.id,
