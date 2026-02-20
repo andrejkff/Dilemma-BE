@@ -87,6 +87,21 @@ export default async function handler(
     const graphics = graphicsRows[0] || { background_image_url: null };
 
     graphics.initial_sprites = [];
+    if (game.initial_sprite_id) {
+      const { rows: initialSpriteRows } = await query(
+        `SELECT * FROM game_sprites WHERE id = $1;`,
+        [game.initial_sprite_id]
+      );
+      if (initialSpriteRows[0]) {
+        const initialSprite = initialSpriteRows[0];
+        graphics.initial_sprites.push({
+          id: initialSprite.id,
+          image_url: initialSprite.image_url,
+          left: initialSprite.left_pos,
+          top: initialSprite.top_pos,
+        });
+      }
+    }
 
     const fullGame = {
       id: game.id,
