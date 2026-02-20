@@ -4,6 +4,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@vercel/functions": "^3.4.2",
     "@vercel/postgres": "^0.7.0",
     "pg": "^8.17.1"
   },

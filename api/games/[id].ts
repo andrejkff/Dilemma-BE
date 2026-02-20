@@ -1,7 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+import { getCache } from '@vercel/functions';
 import { query } from '../../src/db.js';
 
 import headersService from '../../src/services/headers.js';
+
+function buildCacheKey(game_id: string): string {
+  return `game_${game_id}_full_view`;
+}
 
 export default async function handler(
   req: VercelRequest,
@@ -9,12 +15,18 @@ export default async function handler(
 ) {
   headersService.addDefaultResponseHeaders(req, res);
 
+  const cache = getCache();
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const id = req.query.id;
   if (!id) return res.status(400).json({ error: 'Missing game id' });
+
+  const cacheKey = buildCacheKey(id as string);
+  const cachedGame = await cache.get(cacheKey);
+  if (cachedGame) return res.status(200).json(cachedGame);
 
   try {
     const { rows: gameRows } = await query(
@@ -81,6 +93,7 @@ export default async function handler(
       name: game.name,
       first_stage_id: game.first_stage_id,
       initial_status: game.initial_status,
+      under_construction: game.under_construction,
       timeline_config: {
         unitName: game.timeline_unit_name,
         incrementStep: game.timeline_increment_step,
@@ -92,7 +105,9 @@ export default async function handler(
       graphics_config: graphics,
     };
 
-    res.json(fullGame);
+    await cache.set(cacheKey, fullGame, { ttl: 3600 * 24 });
+
+    res.status(200).json(fullGame);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error', details: err });
