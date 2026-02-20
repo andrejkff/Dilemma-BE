@@ -5,6 +5,8 @@ import { query } from '../../src/db.js';
 
 import headersService from '../../src/services/headers.js';
 
+import { CACHE_ENTRY_TTL_MS } from '../../src/constants.js';
+
 function buildCacheKey(game_id: string): string {
   return `game_${game_id}_full_view`;
 }
@@ -120,7 +122,7 @@ export default async function handler(
       graphics_config: graphics,
     };
 
-    await cache.set(cacheKey, fullGame, { ttl: 3600 * 24 });
+    await cache.set(cacheKey, fullGame, { ttl: CACHE_ENTRY_TTL_MS });
 
     res.status(200).json(fullGame);
   } catch (err) {

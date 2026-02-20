@@ -3,6 +3,7 @@ import { query } from '../../src/db.js';
 import { getCache } from '@vercel/functions';
 
 import headersService from '../../src/services/headers.js';
+import { CACHE_ENTRY_TTL_MS } from '../../src/constants.js';
 
 const CACHE_KEY = 'games_index';
 
@@ -22,7 +23,7 @@ export default async function handler(
     const { rows } = await query(
       `SELECT id, name, under_construction FROM games;`
     );
-    await cache.set(CACHE_KEY, rows, { ttl: 3600 * 24 });
+    await cache.set(CACHE_KEY, rows, { ttl: CACHE_ENTRY_TTL_MS });
     res.status(200).json(rows);
   } catch (e) {
     res.status(500).json(e);
