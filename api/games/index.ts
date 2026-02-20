@@ -11,7 +11,7 @@ export default async function handler(
 
   const method = req.method;
   if (method !== 'GET')
-    res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   try {
     const { rows } = await query(
       `SELECT id, name, under_construction FROM games;`
