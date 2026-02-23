@@ -1,11 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { getCache } from '@vercel/functions';
-import { query } from '../../src/db.js';
+import { query } from '../../../src/db.js';
 
-import headersService from '../../src/services/headers.js';
+import headersService from '../../../src/services/headers.js';
 
-import { CACHE_ENTRY_TTL_MS } from '../../src/constants.js';
+import { CACHE_ENTRY_TTL_MS } from '../../../src/constants.js';
 
 function buildCacheKey(game_id: string): string {
   return `game_${game_id}_full_view`;
@@ -23,7 +23,7 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const id = req.query.id;
+  const id = req.query.game_id;
   if (!id) return res.status(400).json({ error: 'Missing game id' });
 
   const cacheKey = buildCacheKey(id as string);
@@ -42,7 +42,7 @@ export default async function handler(
     const game = gameRows[0];
 
     const { rows: slotsRows } = await query(
-      'SELECT * FROM game_slots WHERE game_id = $1 ORDER BY id ASC;',
+      'SELECT * FROM point_slots WHERE game_id = $1 ORDER BY id ASC;',
       [id]
     );
 
