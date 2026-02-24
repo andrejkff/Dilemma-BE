@@ -48,6 +48,7 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
     next_points,
     next_statuses,
     is_for_statuses,
+    required_documents: [],
   };
 }
 
