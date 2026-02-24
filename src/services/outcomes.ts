@@ -8,7 +8,7 @@ async function getOutcomeNextPoints(outcome_id: number): Promise<any[]> {
   return rows;
 };
 
-async function getOutcomeNextStatuses(outcome_id: number): Promise<any> {
+async function getOutcomeNextStatuses(outcome_id: number): Promise<any[]> {
   const { rows } = await query(
     `SELECT * FROM outcome_next_statuses WHERE outcome_id = $1`,
     [outcome_id]
@@ -27,7 +27,7 @@ async function getOutcomeExcludedStatuses(outcome_id: string): Promise<any[]> {
 async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: Array<{ id: string}>): Promise<any> {
   const [
     nextPoints,
-    next_statuses,
+    nextStatuses,
     excludedStatuses,
   ] = await Promise.all([
     getOutcomeNextPoints(outcome_row['id']),
@@ -36,6 +36,7 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
   ]);
   const is_for_statuses = statuses.map(s => s.id).filter(id => !excludedStatuses.find(es => es.status_id === id));
   const next_points: any = {};
+  const next_statuses = nextStatuses.map(s => s.status_id);
   nextPoints.forEach(np => {
     const slot_key = pointSlots.find(ps => ps.id === np.point_slot_id).slot_key
     next_points[slot_key] = {
