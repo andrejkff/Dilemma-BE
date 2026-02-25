@@ -1,9 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { getCache } from '@vercel/functions';
-import { query } from '../../../src/db.js';
 
 import headersService from '../../../src/services/headers.js';
+import gamesService from '../../../src/services/games.js';
+import pointsService from '../../../src/services/points.js';
+import statusService from '../../../src/services/status.js';
+import outcomesService from '../../../src/services/outcomes.js';
+import graphicsService from '../../../src/services/graphics.js';
 
 import { CACHE_ENTRY_TTL_MS } from '../../../src/constants.js';
 
@@ -31,23 +35,17 @@ export default async function handler(
   if (cachedGame) return res.status(200).json(cachedGame);
 
   try {
-    const { rows: gameRows } = await query(
-      'SELECT * FROM games WHERE id = $1;',
-      [id]
-    );
+    const gameRes = await gamesService.getGame(id as string);
 
-    if (gameRows.length === 0) {
+    if (gameRes === false) {
       return res.status(404).json({ error: 'Game not found' });
     }
-    const game = gameRows[0];
+    const game = gameRes;
 
-    const { rows: slotsRows } = await query(
-      'SELECT * FROM point_slots WHERE game_id = $1 ORDER BY id ASC;',
-      [id]
-    );
+    const pointRows = await pointsService.getGamePointSlots(id as string);
 
     const points_map: Record<string, any> = {};
-    slotsRows.forEach((slot) => {
+    pointRows.forEach((slot) => {
       points_map[slot.slot_key] = {
         id: slot.id,
         name: slot.name,
@@ -62,40 +60,27 @@ export default async function handler(
       };
     });
 
-    const { rows: statusesRows } = await query(
-      'SELECT id, name FROM game_statuses WHERE game_id = $1;',
-      [id]
-    );
+    const statusRows = await statusService.getGameStatuses(id as string);
     const status_map: Record<string, any> = {};
-    statusesRows.forEach((status) => {
+    statusRows.forEach((status) => {
       status_map[status.id] = { name: status.name };
     });
 
-    const { rows: outcomesRows } = await query(
-      'SELECT * FROM game_outcomes WHERE game_id = $1 ORDER BY id ASC;',
-      [id]
-    );
-
+    const outcomesRows = await outcomesService.getOutcomesFor(id as string);
     const outcomes = outcomesRows.map((o) => ({
       min_calculated_points: o.min_calculated_points,
       max_calculated_points: o.max_calculated_points,
       outcome_html: o.outcome_html,
     }));
 
-    const { rows: graphicsRows } = await query(
-      'SELECT * FROM game_graphics WHERE game_id = $1;',
-      [id]
-    );
-    const graphics = graphicsRows[0] || { background_image_url: null };
-
-    graphics.initial_sprites = [];
+    const graphicsRes = await graphicsService.getBackgroundFor(id as string);
+    const graphics: any = {
+      background_image_url: graphicsRes?.background_image_url || null,
+      initial_sprites: [],
+    };
     if (game.initial_sprite_id) {
-      const { rows: initialSpriteRows } = await query(
-        `SELECT * FROM game_sprites WHERE id = $1;`,
-        [game.initial_sprite_id]
-      );
-      if (initialSpriteRows[0]) {
-        const initialSprite = initialSpriteRows[0];
+      const initialSprite = await graphicsService.getInitialSprite(game.initial_sprite_id as string);
+      if (!!initialSprite) {
         graphics.initial_sprites.push({
           id: initialSprite.id,
           image_url: initialSprite.image_url,

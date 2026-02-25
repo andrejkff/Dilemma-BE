@@ -53,6 +53,15 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
   };
 }
 
+async function getOutcomesFor(game_id: string): Promise<any[]> {
+  const { rows } = await query(
+    'SELECT * FROM game_outcomes WHERE game_id = $1 ORDER BY id ASC;',
+    [game_id]
+  );
+  return rows;
+}
+
 export default {
   renderOutcomeView,
+  getOutcomesFor,
 };
