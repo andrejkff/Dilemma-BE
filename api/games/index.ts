@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { query } from '../../src/db.js';
 import { getCache } from '@vercel/functions';
 
 import headersService from '../../src/services/headers.js';
+import gamesService from '../../src/services/games.js';
 import { CACHE_ENTRY_TTL_MS } from '../../src/constants.js';
 
 const CACHE_KEY = 'games_index';
@@ -20,11 +20,9 @@ export default async function handler(
   const cachedGames = await cache.get(CACHE_KEY);
   if (cachedGames) return res.status(200).json(cachedGames);
   try {
-    const { rows } = await query(
-      `SELECT id, name, under_construction FROM games;`
-    );
-    await cache.set(CACHE_KEY, rows, { ttl: CACHE_ENTRY_TTL_MS });
-    res.status(200).json(rows);
+    const games = await gamesService.getGames();
+    await cache.set(CACHE_KEY, games, { ttl: CACHE_ENTRY_TTL_MS });
+    res.status(200).json(games);
   } catch (e) {
     res.status(500).json(e);
   }
