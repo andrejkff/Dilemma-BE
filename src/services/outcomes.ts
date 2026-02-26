@@ -1,5 +1,7 @@
 import { query } from '../db.js';
 
+import levelUpService from './level_up.js';
+
 async function getOutcomeNextPoints(outcome_id: number): Promise<any[]> {
   const { rows } = await query(
     `SELECT * FROM outcome_next_points WHERE outcome_id = $1`,
@@ -44,13 +46,20 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
       do_not_affect_dependent_slots: np.do_not_affect_dependent_slots || false,
     };
   });
-  return {
+  const ret: any = {
     ...outcome_row,
     next_points,
     next_statuses,
     is_for_statuses,
     required_documents: [],
   };
+  if (outcome_row['level_up_id']) {
+    const level_up = await levelUpService.renderLevelUpView(outcome_row['level_up_id']);
+    ret.level_up = level_up;
+  } else
+    ret.level_up = null;
+
+  return ret;
 }
 
 async function getOutcomesFor(game_id: string): Promise<any[]> {
