@@ -23,11 +23,7 @@ async function renderLevelUpView(id: string): Promise<any | false> {
   let next_statuses: any[] = [];
   if (nextStatusesRes !== false)
     next_statuses = [
-      ...nextStatusesRes.map(ns => ({
-        status_id: ns.status_id,
-        text: ns.text,
-        remove_status_id: ns.remove_status_id || null,
-      })),
+      ...nextStatusesRes,
     ];
   return {
     ...levelUpRows[0],
