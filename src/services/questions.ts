@@ -1,5 +1,6 @@
 import { query } from '../db.js';
 import answersService from './answers.js';
+import levelUpService from './level_up.js';
 
 async function getQuestionDependencies(question_id: number): Promise<any[]> {
   const { rows } = await query(
@@ -40,17 +41,24 @@ async function renderQuestionView(question_row: any, statuses: Array<{id: string
     getQuestionAnswers(question_id, statuses, pointSlots),
   ]);
   const required_statuses = statuses.map(s => s.id).filter(id => !excludedStatuses.find(es => es.status_id === id));
-  return {
+  const ret = {
     ...question_row,
     required_statuses,
     preceeding_question_ids: dependencies.map(d => d.required_question_id),
     answers,
   };
+  if (question_row['level_up_id']) {
+    const level_up = await levelUpService.renderLevelUpView(question_row['level_up_id']);
+    ret.level_up = level_up;
+  } else
+    ret.level_up = null;
+  delete ret['level_up_id'];
+  return ret;
 };
 
 async function getQuestionsList(stage_id: string): Promise<any[]> {
   const { rows } = await query(
-    `SELECT * FROM questions WHERE stage_id = $1`,
+    `SELECT * FROM questions WHERE stage_id = $1 ORDER BY id`,
     [stage_id]
   );
   return rows;
