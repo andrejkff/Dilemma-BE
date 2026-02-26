@@ -26,6 +26,7 @@ async function renderLevelUpView(id: string): Promise<any | false> {
       ...nextStatusesRes.map(ns => ({
         status_id: ns.status_id,
         text: ns.text,
+        remove_status_id: ns.remove_status_id || null,
       })),
     ];
   return {
