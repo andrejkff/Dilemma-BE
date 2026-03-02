@@ -7,6 +7,40 @@ async function saveSession(sessionId: string, gameId: number): Promise<void> {
   );
 };
 
+async function saveUser(
+  age_group: string,
+  gender: string,
+  location: string,
+  has_business: boolean,
+  session_id: string,
+) {
+  await query (
+    `
+      INSERT INTO players (
+        age_group,
+        gender,
+        location,
+        has_business,
+        session_id
+      )
+      VALUES (
+        $1,
+        $2,
+        $3,
+        $4,
+        $5
+      );
+    `, [
+      age_group,
+      gender,
+      location,
+      has_business,
+      session_id,
+    ]
+  )
+}
+
 export default {
   saveSession,
+  saveUser,
 };
