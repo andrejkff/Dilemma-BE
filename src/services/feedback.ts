@@ -37,10 +37,44 @@ async function saveUser(
       has_business,
       session_id,
     ]
+  );
+};
+
+async function saveAnsweredQuestion(
+  question_id: number,
+  answer_id: number,
+  outcome_id: number,
+  order_number: number,
+  session_id: string,
+) {
+  await query (
+    `
+      INSERT INTO answered_questions (
+        question_id,
+        answer_id,
+        outcome_id,
+        order_number,
+        session_id
+      )
+      VALUES (
+        $1,
+        $2,
+        $3,
+        $4,
+        $5
+      )
+    `, [
+      question_id,
+      answer_id,
+      outcome_id,
+      order_number,
+      session_id,
+    ]
   )
 }
 
 export default {
   saveSession,
   saveUser,
+  saveAnsweredQuestion,
 };
