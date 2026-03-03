@@ -1,4 +1,4 @@
-import { query } from '../db.js';
+import { query } from '../../db.js';
 import outcomesService from './outcomes.js';
 
 async function getAnswerExcludedStatuses(answer_id: number): Promise<any[]> {

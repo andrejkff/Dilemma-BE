@@ -1,4 +1,4 @@
-import { query } from '../db.js';
+import { query } from '../../db.js';
 
 async function getLevelUpNextStatus(level_up_id: string): Promise<any[] | false> {
   const { rows: nextStatusRows } = await query(
