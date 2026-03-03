@@ -2,12 +2,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { getCache } from '@vercel/functions';
 
-import headersService from '../../../src/services/headers.js';
-import gamesService from '../../../src/services/games.js';
-import pointsService from '../../../src/services/points.js';
-import statusService from '../../../src/services/status.js';
-import outcomesService from '../../../src/services/outcomes.js';
-import graphicsService from '../../../src/services/graphics.js';
+import headersService from '../../../src/services/utils/headers.js';
+import gamesService from '../../../src/services/data/games.js';
+import pointsService from '../../../src/services/data/points.js';
+import statusService from '../../../src/services/data/status.js';
+import outcomesService from '../../../src/services/data/outcomes.js';
+import graphicsService from '../../../src/services/data/graphics.js';
 
 import { CACHE_ENTRY_TTL_MS } from '../../../src/constants.js';
 

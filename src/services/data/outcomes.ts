@@ -1,4 +1,4 @@
-import { query } from '../db.js';
+import { query } from '../../db.js';
 
 async function getOutcomeNextPoints(outcome_id: number): Promise<any[]> {
   const { rows } = await query(

@@ -1,4 +1,4 @@
-import { query } from '../db.js';
+import { query } from '../../db.js';
 
 async function getGameStatuses(game_id: string): Promise<any[]> {
   const { rows } = await query(

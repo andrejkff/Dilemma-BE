@@ -1,4 +1,4 @@
-import { query } from '../db.js';
+import { query } from '../../db.js';
 
 async function getStage(stage_id: string): Promise<any | boolean> {
   const { rows: stageRows } = await query(
