@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-import headersService from '../../src/services/headers.js';
-import feedbackService from '../../src/services/feedback.js';
+import headersService from '../../src/services/utils/headers.js';
+import feedbackService from '../../src/services/data/feedback.js';
 
 export default async function handler(
   req: VercelRequest,

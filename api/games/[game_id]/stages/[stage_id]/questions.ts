@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { getCache } from '@vercel/functions';
 
-import headersService from '../../../../../src/services/headers.js';
-import questionsService from '../../../../../src/services/questions.js';
-import statusService from '../../../../../src/services/status.js';
-import pointsService from '../../../../../src/services/points.js';
+import headersService from '../../../../../src/services/utils/headers.js';
+import questionsService from '../../../../../src/services/data/questions.js';
+import statusService from '../../../../../src/services/data/status.js';
+import pointsService from '../../../../../src/services/data/points.js';
 import { CACHE_ENTRY_TTL_MS } from '../../../../../src/constants.js';
 
 function buildCacheKey(stage_id: string): string {

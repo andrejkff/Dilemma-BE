@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { getCache } from '@vercel/functions';
 
-import headersService from '../../src/services/headers.js';
-import gamesService from '../../src/services/games.js';
+import headersService from '../../src/services/utils/headers.js';
+import gamesService from '../../src/services/data/games.js';
 import { CACHE_ENTRY_TTL_MS } from '../../src/constants.js';
 
 const CACHE_KEY = 'games_index';
