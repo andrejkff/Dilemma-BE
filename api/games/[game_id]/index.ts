@@ -67,11 +67,7 @@ export default async function handler(
     });
 
     const outcomesRows = await outcomesService.getOutcomesFor(id as string);
-    const outcomes = outcomesRows.map((o) => ({
-      min_calculated_points: o.min_calculated_points,
-      max_calculated_points: o.max_calculated_points,
-      outcome_html: o.outcome_html,
-    }));
+    const outcomes = outcomesRows;
 
     const graphicsRes = await graphicsService.getBackgroundFor(id as string);
     const graphics: any = {
