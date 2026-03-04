@@ -19,40 +19,51 @@ export default async function handler(
   )
     return res.status(404).json({ error: 'Game not found' });
 
-  let has_business: Array<{key: string | boolean, label: string }>;
+  let has_business: { label: string, enums: Array<{key: string | boolean, label: string }> } = {
+    label: 'Статус',
+    enums: [],
+  };
 
   switch (game_id) {
     case '1':
-      has_business = [
+      has_business.enums = [
         { key: true, label: 'Издавам сместување/соби' },
         { key: false, label: 'Не издавам сместување/соби' },
       ];
       break;
     case '2':
-      has_business = [
+      has_business.enums = [
         { key: true, label: 'Поседувам лозје/опрема за производство' },
         { key: false, label: 'Не поседувам лозје/опрема за производство' },
       ];
       break;
     default:
-      has_business = [];
       break;
   }
 
   res.status(200).json({
-    age_group: [
-      { key: 'up_to_24', label: 'Помлад/а од 25 години' },
-      { key: '25_49', label: 'Меѓу 25 и 49 години' },
-      { key: '50_plus', label: '50 години или постар/а' },
-    ],
-    gender: [
-      { key: 'male', label: 'Машки' },
-      { key: 'female', label: 'Женски' },
-    ],
-    location: [
-      { key: 'dk', label: 'Демир Капија' },
-      { key: 'other', label: 'Друга локација'}
-    ],
+    age_group: {
+      label: 'Возраст',
+      enums: [
+        { key: 'up_to_24', label: 'Помлад/а од 25 години' },
+        { key: '25_49', label: 'Меѓу 25 и 49 години' },
+        { key: '50_plus', label: '50 години или постар/а' },
+      ],
+    },
+    gender: {
+      label: 'Пол',
+      enums: [
+        { key: 'male', label: 'Машки' },
+        { key: 'female', label: 'Женски' },
+      ],
+    },
+    location: {
+      label: 'Локација',
+      enums: [
+        { key: 'dk', label: 'Демир Капија' },
+        { key: 'other', label: 'Друга локација'}
+      ]
+    },
     has_business,
   });
 };
