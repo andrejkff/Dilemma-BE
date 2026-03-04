@@ -11,6 +11,7 @@ export default async function handler(
   headersService.addDefaultResponseHeaders(req, res);
 
   const method = req.method;
+  if (method === 'OPTIONS') return;
   if (method !== 'POST')
     return res.status(405).json({ error: 'Method not allowed' });
 
