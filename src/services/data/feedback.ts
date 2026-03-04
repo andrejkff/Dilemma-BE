@@ -73,8 +73,30 @@ async function saveAnsweredQuestion(
   )
 }
 
+async function saveOutcome(
+  session_id: string,
+  outcome_id: number,
+) {
+  await query(
+    `
+      INSERT INTO game_session_outcomes(
+        session_id,
+        outcome_id
+      )
+      VALUES (
+        $1,
+        $2
+      )
+    `, [
+      session_id,
+      outcome_id,
+    ]
+  )
+}
+
 export default {
   saveSession,
   saveUser,
   saveAnsweredQuestion,
+  saveOutcome,
 };
