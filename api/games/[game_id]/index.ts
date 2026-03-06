@@ -59,6 +59,7 @@ export default async function handler(
         outcomeConfig: slot.outcome_config,
         larger_unit_name: slot.larger_unit_name,
         larger_unit_factor: slot.larger_unit_factor,
+        larger_unit_min_value: slot.larger_unit_min_value,
       };
     });
 
