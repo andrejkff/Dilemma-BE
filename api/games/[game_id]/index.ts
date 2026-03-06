@@ -60,11 +60,7 @@ export default async function handler(
       };
     });
 
-    const statusRows = await statusService.getGameStatuses(id as string);
-    const status_map: Record<string, any> = {};
-    statusRows.forEach((status) => {
-      status_map[status.id] = { name: status.name };
-    });
+    const status_map = await statusService.getGameStatuses(id as string);
 
     const outcomesRows = await outcomesService.getOutcomesFor(id as string);
     const outcomes = outcomesRows;
