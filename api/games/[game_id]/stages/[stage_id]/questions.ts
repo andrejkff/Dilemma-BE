@@ -37,7 +37,7 @@ export default async function handler(
       pointSlots,
     ] = await Promise.all([
       questionsService.getQuestionsList(stage_id as string),
-      statusService.getGameStatuses(game_id as string),
+      statusService.getGameStatusesMinimal(game_id as string),
       pointsService.getGamePointSlots(game_id as string)
     ]);
     const getQuestionsDetailsPromises: Array<Promise<any>> = [];

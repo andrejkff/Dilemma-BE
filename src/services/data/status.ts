@@ -42,10 +42,19 @@ async function getGameStatuses(game_id: string): Promise<any[]> {
       point_limits_adjust: ms.point_limits_adjust,
     };
   });
-  
+
   return status_map;
 };
 
+async function getGameStatusesMinimal(game_id: string): Promise<any[]> {
+  const { rows } = await query(
+    `SELECT * FROM game_statuses WHERE game_id = $1`,
+    [game_id]
+  );
+  return rows;
+}
+
 export default {
   getGameStatuses,
+  getGameStatusesMinimal,
 };
