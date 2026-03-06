@@ -47,10 +47,18 @@ export default async function handler(
     const points_map: Record<string, any> = {};
     pointRows.forEach((slot) => {
       points_map[slot.slot_key] = {
-        ...slot,
+        id: slot.id,
+        name: slot.name,
         initial_value: parseInt(slot.initial_value),
         min_value: parseInt(slot.min_value),
         max_value: parseInt(slot.max_value),
+        decimal_places: slot.decimal_places,
+        points_unit: slot.points_unit,
+        include_in_game_outcome_calculation: slot.include_in_game_outcome_calculation,
+        continuousConfig: slot.continuous_config,
+        outcomeConfig: slot.outcome_config,
+        larger_unit_name: slot.larger_unit_name,
+        larger_unit_factor: slot.larger_unit_factor,
       };
     });
 
