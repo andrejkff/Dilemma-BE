@@ -60,6 +60,7 @@ export default async function handler(
         larger_unit_name: slot.larger_unit_name,
         larger_unit_factor: slot.larger_unit_factor,
         larger_unit_min_value: slot.larger_unit_min_value,
+        display_max_limit: slot.display_max_limit,
       };
     });
 
