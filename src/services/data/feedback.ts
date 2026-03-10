@@ -46,6 +46,8 @@ async function saveAnsweredQuestion(
   outcome_id: number,
   order_number: number,
   session_id: string,
+  status_id: string,
+  game_id: number,
 ) {
   await query (
     `
@@ -54,14 +56,18 @@ async function saveAnsweredQuestion(
         answer_id,
         outcome_id,
         order_number,
-        session_id
+        session_id,
+        status_id,
+        game_id
       )
       VALUES (
         $1,
         $2,
         $3,
         $4,
-        $5
+        $5,
+        $6,
+        $7
       )
     `, [
       question_id,
@@ -69,6 +75,8 @@ async function saveAnsweredQuestion(
       outcome_id,
       order_number,
       session_id,
+      status_id,
+      game_id,
     ]
   )
 }
