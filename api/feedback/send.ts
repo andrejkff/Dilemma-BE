@@ -20,7 +20,7 @@ export default async function handler(
   let requiredFieldNames: string[] = [];
   switch(feedbackType) {
     case 'answer':
-      requiredFieldNames = ['question_id', 'answer_id','outcome_id', 'order_number', 'session_id'];
+      requiredFieldNames = ['question_id', 'answer_id','outcome_id', 'order_number', 'session_id', 'status_id', 'game_id'];
       break;
     case 'game':
       requiredFieldNames = ['game_id', 'session_id'];
@@ -55,6 +55,7 @@ export default async function handler(
     gender,
     location,
     has_business,
+    status_id,
   } = req.body;
 
   try {
@@ -66,6 +67,8 @@ export default async function handler(
           outcome_id,
           order_number,
           session_id,
+          status_id,
+          game_id,
         );
         break;
       case 'game':
