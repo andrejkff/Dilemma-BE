@@ -1,4 +1,5 @@
 import { query } from '../../db.js';
+import badgesService from './badges.js';
 
 async function getOutcomeNextPoints(outcome_id: number): Promise<any[]> {
   const { rows } = await query(
@@ -47,6 +48,9 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
     getOutcomeExcludedStatuses(outcome_row['id']),
     getOutcomePointLimitsAdjust(outcome_row['id']),
   ]);
+  let badge: any | false = false;
+  if (outcome_row.badge_id)
+    badge = await badgesService.getBadge(outcome_row.badge_id);
   const is_for_statuses = statuses.map(s => s.id).filter(id => !excludedStatuses.find(es => es.status_id === id));
   const next_points: any = {};
   const next_statuses = nextStatuses.map(s => s.status_id);
@@ -72,6 +76,8 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
     required_documents: [],
     point_limits_adjust,
   };
+  delete ret.badge_id;
+  if (badge !== false) ret.badge = badge;
 
   return ret;
 }
