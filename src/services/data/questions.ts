@@ -18,6 +18,14 @@ async function getQuestionExcludedStatuses(question_id: number): Promise<any[]> 
   return rows;
 };
 
+async function getQuestionHideForStatuses(question_id: number): Promise<any[]> {
+  const { rows } = await query(
+    `SELECT status_id FROM question_hide_for_statuses WHERE question_id = $1`,
+    [question_id]
+  );
+  return rows.map(r => r.status_id);
+};
+
 async function getQuestionMinPointsThreshold(question_id: number): Promise<any[]> {
   const { rows } = await query(
     `SELECT q.threshold, p.slot_key
@@ -51,10 +59,12 @@ async function renderQuestionView(question_row: any, statuses: Array<{id: string
     dependencies,
     excludedStatuses,
     answers,
+    hide_for_statuses,
   ] = await Promise.all([
     getQuestionDependencies(question_id),
     getQuestionExcludedStatuses(question_id),
     getQuestionAnswers(question_id, statuses, pointSlots),
+    getQuestionHideForStatuses(question_id),
   ]);
   const required_statuses = statuses.map(s => s.id).filter(id => !excludedStatuses.find(es => es.status_id === id));
   const display_if_points_higher_than = await getQuestionMinPointsThreshold(question_id);
@@ -64,6 +74,7 @@ async function renderQuestionView(question_row: any, statuses: Array<{id: string
     preceeding_question_ids: dependencies.map(d => d.required_question_id),
     display_if_points_higher_than,
     answers,
+    hide_for_statuses,
   };
   if (question_row['level_up_id']) {
     const level_up = await levelUpService.renderLevelUpView(question_row['level_up_id']);
