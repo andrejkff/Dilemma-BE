@@ -21,8 +21,7 @@ async function renderStatus(status_row: any, game_id: string): Promise<any> {
     };
   })
   return {
-    id: status_row.id,
-    name: status_row.name,
+    ...status_row,
     point_limits_adjust,
   };
 };
@@ -38,9 +37,11 @@ async function getGameStatuses(game_id: string): Promise<any[]> {
   );
   mapped_statuses.forEach(ms => {
     status_map[ms.id] = {
-      name: ms.name,
+      ...ms,
       point_limits_adjust: ms.point_limits_adjust,
     };
+    delete status_map[ms.id].id;
+    delete status_map[ms.id].game_id;
   });
 
   return status_map;
