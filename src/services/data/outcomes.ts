@@ -1,5 +1,6 @@
 import { query } from '../../db.js';
 import badgesService from './badges.js';
+import linksService from './links.js';
 
 async function getOutcomeNextPoints(outcome_id: number): Promise<any[]> {
   const { rows } = await query(
@@ -42,11 +43,13 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
     nextStatuses,
     excludedStatuses,
     pointAdjustRows,
+    links,
   ] = await Promise.all([
     getOutcomeNextPoints(outcome_row['id']),
     getOutcomeNextStatuses(outcome_row['id']),
     getOutcomeExcludedStatuses(outcome_row['id']),
     getOutcomePointLimitsAdjust(outcome_row['id']),
+    linksService.getLinksForOutcome(outcome_row['id']),
   ]);
   let badge: any | false = false;
   if (outcome_row.badge_id)
@@ -73,8 +76,11 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
     next_points,
     next_statuses,
     is_for_statuses,
-    required_documents: [],
     point_limits_adjust,
+    required_documents: links.map(l => ({
+      name: l.name,
+      link: l.url,
+    })),
   };
   delete ret.badge_id;
   if (badge !== false) ret.badge = badge;
