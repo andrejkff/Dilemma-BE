@@ -62,6 +62,7 @@ export default async function handler(
         larger_unit_min_value: slot.larger_unit_min_value,
         display_max_limit: slot.display_max_limit,
         hide_in_ui: slot.hide_in_ui,
+        order_number: slot.order_number,
       };
     });
 
