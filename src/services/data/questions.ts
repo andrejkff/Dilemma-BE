@@ -2,6 +2,14 @@ import { query } from '../../db.js';
 import answersService from './answers.js';
 import levelUpService from './level_up.js';
 
+async function getAnswerDependencies(question_id: number): Promise<any[]> {
+  const { rows } = await query(
+    `SELECT * FROM question_answer_dependencies WHERE question_id = $1`,
+    [question_id]
+  );
+  return rows;
+}
+
 async function getQuestionDependencies(question_id: number): Promise<any[]> {
   const { rows } = await query(
     `SELECT * FROM question_dependencies WHERE question_id = $1`,
@@ -56,12 +64,14 @@ async function getQuestionAnswers(question_id: number, statuses: Array<{ id: str
 async function renderQuestionView(question_row: any, statuses: Array<{id: string}>, pointSlots: any[]): Promise<object> {
   const question_id = question_row['id'];
   const [
-    dependencies,
+    questionDependencies,
+    answerDependencies,
     excludedStatuses,
     answers,
     hide_for_statuses,
   ] = await Promise.all([
     getQuestionDependencies(question_id),
+    getAnswerDependencies(question_id),
     getQuestionExcludedStatuses(question_id),
     getQuestionAnswers(question_id, statuses, pointSlots),
     getQuestionHideForStatuses(question_id),
@@ -71,7 +81,8 @@ async function renderQuestionView(question_row: any, statuses: Array<{id: string
   const ret = {
     ...question_row,
     required_statuses,
-    preceeding_question_ids: dependencies.map(d => d.required_question_id),
+    preceeding_question_ids: questionDependencies.map(qd => qd.required_question_id),
+    preceeding_answer_ids: answerDependencies.map(ad => ad.answer_id),
     display_if_points_higher_than,
     answers,
     hide_for_statuses,
