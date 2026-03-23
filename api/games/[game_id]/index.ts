@@ -63,7 +63,8 @@ export default async function handler(
         display_max_limit: slot.display_max_limit,
         hide_in_ui: slot.hide_in_ui,
         order_number: slot.order_number,
-        display_calculation_in_answer_outcome: slot.display_in_answer_outcome || false,
+        is_wallet_slot: slot.is_wallet_slot || false,
+        is_income_slot: slot.is_income_slot || false,
       };
     });
 
