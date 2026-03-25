@@ -2,7 +2,7 @@ import { query } from '../../db.js';
 
 async function getGames(): Promise<any[]> {
   const { rows } = await query(
-    `SELECT id, name, under_construction FROM games;`
+    `SELECT id, name, under_construction, game_image_url FROM games;`
   );
   return rows;
 };
