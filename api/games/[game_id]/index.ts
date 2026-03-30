@@ -68,6 +68,7 @@ export default async function handler(
         icon_url: slot.icon_url,
         filling_bar_image_url: slot.filling_bar_image_url,
         background_image_url: slot.background_image_url,
+        filling_bar_color: slot.filling_bar_color,
       };
     });
 
