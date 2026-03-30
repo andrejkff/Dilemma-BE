@@ -65,6 +65,8 @@ export default async function handler(
         order_number: slot.order_number,
         is_wallet_slot: slot.is_wallet_slot || false,
         is_income_slot: slot.is_income_slot || false,
+        icon_url: slot.icon_url,
+        filling_bar_image_url: slot.filling_bar_image_url,
       };
     });
 
