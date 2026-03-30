@@ -67,6 +67,7 @@ export default async function handler(
         is_income_slot: slot.is_income_slot || false,
         icon_url: slot.icon_url,
         filling_bar_image_url: slot.filling_bar_image_url,
+        background_image_url: slot.background_image_url,
       };
     });
 
