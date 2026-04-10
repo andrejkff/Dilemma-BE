@@ -21,7 +21,20 @@ async function getLinksForOutcome(id: string): Promise<any[]> {
   return linksDetails.filter(ld => ld !== false);
 };
 
+async function getLinksForLevelUpOutcome(id: string): Promise<any[]> {
+  const { rows } = await query(
+    `SELECT * FROM level_up_links WHERE level_up_id = $1`,
+    [id],
+  );
+  if (!rows.length) return [];
+  const linksDetails = await Promise.all(
+    rows.map(r => getLink(r.link_id))
+  );
+  return linksDetails.filter(ld => ld !== false);
+};
+
 export default {
   getLinksForOutcome,
+  getLinksForLevelUpOutcome,
   getLink,
 }

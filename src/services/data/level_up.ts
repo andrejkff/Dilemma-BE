@@ -1,4 +1,5 @@
 import { query } from '../../db.js';
+import linksService from './links.js';
 
 async function getLevelUpNextStatus(level_up_id: string): Promise<any[] | false> {
   const { rows: nextStatusRows } = await query(
@@ -9,15 +10,6 @@ async function getLevelUpNextStatus(level_up_id: string): Promise<any[] | false>
   return nextStatusRows;
 };
 
-async function getLevelUpLinks(level_up_id: string): Promise<any[] | false> {
-  const { rows } = await query(
-    'SELECT * FROM level_up_links WHERE level_up_id = $1',
-    [level_up_id]
-  );
-  if (!rows.length) return false;
-  return rows;
-}
-
 async function renderLevelUpView(id: string): Promise<any | false> {
   const { rows: levelUpRows } = await query(
     'SELECT * FROM level_ups WHERE id = $1;',
@@ -26,19 +18,15 @@ async function renderLevelUpView(id: string): Promise<any | false> {
   if (!levelUpRows.length) return false;
   const [
     nextStatusesRes,
-    linksRes,
   ] = await Promise.all([
     getLevelUpNextStatus(id),
-    getLevelUpLinks(id),
   ]);
   let next_statuses: any[] = [];
   if (nextStatusesRes !== false)
     next_statuses = [
       ...nextStatusesRes,
     ];
-  let links: any = [];
-  if (linksRes !== false)
-    links = linksRes;
+  const links = await linksService.getLinksForLevelUpOutcome(id);
   return {
     ...levelUpRows[0],
     next_statuses,
