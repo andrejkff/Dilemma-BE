@@ -30,7 +30,7 @@ async function renderLevelUpView(id: string): Promise<any | false> {
   return {
     ...levelUpRows[0],
     next_statuses,
-    links,
+    links: links.map(l => ({ name: l.name, link: l.url })),
   }
 };
 
