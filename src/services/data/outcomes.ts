@@ -79,6 +79,7 @@ async function renderOutcomeView(outcome_row: any, pointSlots: any[], statuses: 
     point_limits_adjust,
     required_documents: links.map(l => ({
       name: l.name,
+      name_en: l.name_en,
       link: l.url,
     })),
   };
