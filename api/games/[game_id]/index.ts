@@ -49,6 +49,7 @@ export default async function handler(
       points_map[slot.slot_key] = {
         id: slot.id,
         name: slot.name,
+        name_en: slot.name_en,
         initial_value: parseInt(slot.initial_value),
         min_value: parseInt(slot.min_value),
         max_value: parseInt(slot.max_value),
@@ -98,11 +99,13 @@ export default async function handler(
     const fullGame = {
       id: game.id,
       name: game.name,
+      name_en: game.name_en,
       first_stage_id: game.first_stage_id,
       initial_status: game.initial_status,
       under_construction: game.under_construction,
       timeline_config: {
         unitName: game.timeline_unit_name,
+        unitName_en: game.timeline_unit_name_en,
         incrementStep: game.timeline_increment_step,
         max_value: game.timeline_max_value,
       },
