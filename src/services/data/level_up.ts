@@ -3,7 +3,7 @@ import linksService from './links.js';
 
 async function getLevelUpNextStatus(level_up_id: string): Promise<any[] | false> {
   const { rows: nextStatusRows } = await query(
-    'SELECT status_id, text, remove_status_id, hide_for_status_id, outcome_html FROM level_up_next_status WHERE level_up_id = $1',
+    'SELECT status_id, text, text_en, remove_status_id, hide_for_status_id, outcome_html, outcome_html_en FROM level_up_next_status WHERE level_up_id = $1',
     [level_up_id]
   );
   if (!nextStatusRows.length) return false;
@@ -30,7 +30,7 @@ async function renderLevelUpView(id: string): Promise<any | false> {
   return {
     ...levelUpRows[0],
     next_statuses,
-    links: links.map(l => ({ name: l.name, link: l.url })),
+    links: links.map(l => ({ name: l.name, link: l.url, name_en: l.name_en })),
   }
 };
 
